@@ -3,7 +3,6 @@ FROM python:3.12-slim
 # Instalar dependencias del sistema para Chromium
 RUN apt-get update && apt-get install -y \
     chromium \
-    chromium-driver \
     fonts-liberation \
     libasound2 \
     libatk-bridge2.0-0 \
@@ -27,11 +26,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Decirle a Playwright que use el Chromium del sistema
+# Playwright usa el Chromium del sistema
 ENV PLAYWRIGHT_BROWSERS_PATH=/usr/bin
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 COPY . .
 
 EXPOSE 8501
-CMD streamlit run dashboard.py --server.port=$PORT --server.address=0.0.0.0
+CMD ["streamlit", "run", "dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
