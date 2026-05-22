@@ -1,0 +1,12 @@
+# Base de datos local (no subir a GitHub)
+prices.db
+tracker.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Playwright
+.playwright/
