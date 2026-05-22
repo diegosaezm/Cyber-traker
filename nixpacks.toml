@@ -2,7 +2,7 @@
 nixPkgs = ["python312", "python312Packages.pip", "chromium", "nss", "nspr", "atk", "cups", "dbus", "expat", "libdrm", "libxkbcommon", "mesa", "xorg.libX11", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXext", "xorg.libXfixes", "xorg.libXrandr", "xorg.libxcb", "gtk3", "pango", "cairo", "alsa-lib"]
 
 [phases.install]
-cmds = ["pip3 install -r requirements.txt", "playwright install chromium"]
+cmds = ["pip3 install -r requirements.txt --break-system-packages", "playwright install chromium"]
 
 [start]
 cmd = "streamlit run dashboard.py --server.port=$PORT --server.address=0.0.0.0"
