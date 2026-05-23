@@ -34,6 +34,11 @@ else:
             # "https://simple.ripley.cl/...",
         ],
         "paris": [],
+        
+        "dbs": [
+            "https://dbs.cl/corrector-true-skin-high-cover-ca-27708-0"
+
+        ]
     }
 
 # Descuento mínimo real para disparar alerta (%)

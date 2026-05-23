@@ -175,6 +175,31 @@ def scrape_ripley(url):
         name_selector="h1.product-title"
     )
 
+def scrape_dbs(url):
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.set_extra_http_headers({
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            })
+            page.goto(url, timeout=30000, wait_until="domcontentloaded")
+            page.wait_for_timeout(3000)
+
+            price_el = page.query_selector("[data-price-amount]")
+            raw_price = price_el.get_attribute("data-price-amount") if price_el else None
+
+            name_el = page.query_selector("h1")
+            name = name_el.inner_text().strip() if name_el else "Sin nombre"
+            browser.close()
+
+            if raw_price:
+                price = int(float(raw_price))
+                return {"name": name, "price": price, "url": url}
+    except Exception as e:
+        log.error(f"Error scraping DBS {url}: {e}")
+    return None
+
 
 def scrape_paris(url):
     return scrape_with_playwright(
@@ -188,6 +213,7 @@ SCRAPERS = {
     "falabella": scrape_falabella,
     "ripley":    scrape_ripley,
     "paris":     scrape_paris,
+    "dbs":       scrape_dbs
 }
 
 
