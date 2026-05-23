@@ -25,10 +25,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+RUN which streamlit && streamlit --version
+
 ENV PLAYWRIGHT_BROWSERS_PATH=/usr/bin
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 COPY . .
 
 EXPOSE 10000
-CMD streamlit run dashboard.py --server.port=${PORT:-10000} --server.address=0.0.0.0
+CMD ["/usr/local/bin/streamlit", "run", "dashboard.py", "--server.port=10000", "--server.address=0.0.0.0"]
