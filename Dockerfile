@@ -23,9 +23,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-RUN which streamlit && streamlit --version
+RUN pip install --no-cache-dir -r requirements.txt
 
 ENV PLAYWRIGHT_BROWSERS_PATH=/usr/bin
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
