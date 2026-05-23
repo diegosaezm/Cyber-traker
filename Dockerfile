@@ -1,6 +1,5 @@
 FROM python:3.12-slim
 
-# Instalar dependencias del sistema para Chromium
 RUN apt-get update && apt-get install -y \
     chromium \
     fonts-liberation \
@@ -26,11 +25,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Playwright usa el Chromium del sistema
 ENV PLAYWRIGHT_BROWSERS_PATH=/usr/bin
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 COPY . .
 
-EXPOSE 8501
-CMD ["streamlit", "run", "dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
+EXPOSE 10000
+CMD streamlit run dashboard.py --server.port=${PORT:-10000} --server.address=0.0.0.0
