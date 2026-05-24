@@ -130,35 +130,16 @@ def scrape_ripley(url):
     )
 def scrape_dbs(url):
     try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(
-                headless=True,
-                args=[
-                    "--no-sandbox",
-                    "--disable-setuid-sandbox",
-                    "--disable-blink-features=AutomationControlled",
-                ]
-            )
-            context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-                viewport={"width": 1280, "height": 800},
-                locale="es-CL",
-            )
-            page = context.new_page()
-            page.goto(url, timeout=30000, wait_until="networkidle")  # espera red idle
-            page.wait_for_selector("[data-price-amount]", timeout=10000)  # espera el precio
-            page.wait_for_timeout(3000)
-
-            price_el = page.query_selector("[data-price-amount]")
-            raw_price = price_el.get_attribute("data-price-amount") if price_el else None
-
-            name_el = page.query_selector("h1")
-            name = name_el.inner_text().strip() if name_el else "Sin nombre"
-            browser.close()
-
-            if raw_price:
-                price = int(float(raw_price))
-                return {"name": name, "price": price, "url": url}
+        r = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        }, timeout=15)
+        soup = BeautifulSoup(r.text, "html.parser")
+        price_el = soup.find(attrs={"data-price-amount": True})
+        name_el = soup.find("h1")
+        if price_el:
+            price = int(float(price_el["data-price-amount"]))
+            name = name_el.get_text().strip() if name_el else "Sin nombre"
+            return {"name": name, "price": price, "url": url}
     except Exception as e:
         log.error(f"Error scraping DBS {url}: {e}")
     return None
