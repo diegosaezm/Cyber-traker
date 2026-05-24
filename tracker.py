@@ -181,19 +181,10 @@ def calculate_discount(old_price, new_price):
 
 
 def is_real_discount(conn, url, new_price, min_discount_pct=5):
-    """
-    Retorna True si el precio bajó al menos min_discount_pct% 
-    respecto al precio histórico máximo (detecta inflación previa).
-    """
-    cur = conn.execute(
-        "SELECT MAX(price) FROM price_history WHERE product_url=?", (url,)
-    )
-    row = cur.fetchone()
-    max_price = row[0] if row and row[0] else None
-
+    from db import get_max_price
+    max_price = get_max_price(conn, url)
     if not max_price:
         return False, 0
-
     discount = calculate_discount(max_price, new_price)
     return discount >= min_discount_pct, discount
 
