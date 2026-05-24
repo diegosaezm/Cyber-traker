@@ -145,7 +145,8 @@ def scrape_dbs(url):
                 locale="es-CL",
             )
             page = context.new_page()
-            page.goto(url, timeout=30000, wait_until="domcontentloaded")
+            page.goto(url, timeout=30000, wait_until="networkidle")  # espera red idle
+            page.wait_for_selector("[data-price-amount]", timeout=10000)  # espera el precio
             page.wait_for_timeout(3000)
 
             price_el = page.query_selector("[data-price-amount]")
