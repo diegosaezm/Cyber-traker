@@ -173,7 +173,7 @@ def load_data():
     if not rows:
         return pd.DataFrame()
     df = pd.DataFrame(rows)
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df["timestamp"] = pd.to_datetime(df["timestamp"], format="mixed")
     df["price"] = df["price"].astype(int)
     return df
 
