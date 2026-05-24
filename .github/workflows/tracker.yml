@@ -43,6 +43,7 @@ jobs:
           EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
           PRODUCTS_JSON: ${{ secrets.PRODUCTS_JSON }}
           RUN_ONCE: "true"
+          DATABASE_URL: ${{ secrets.DATABASE_URL }} 
         run: python tracker.py
 
       - name: Guardar base de datos actualizada
