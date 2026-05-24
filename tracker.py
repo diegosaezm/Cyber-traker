@@ -128,15 +128,23 @@ def scrape_ripley(url):
         price_selector="div.best-price",
         name_selector="h1.product-title"
     )
-
 def scrape_dbs(url):
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-            page.set_extra_http_headers({
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            })
+            browser = p.chromium.launch(
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-setuid-sandbox",
+                    "--disable-blink-features=AutomationControlled",
+                ]
+            )
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                viewport={"width": 1280, "height": 800},
+                locale="es-CL",
+            )
+            page = context.new_page()
             page.goto(url, timeout=30000, wait_until="domcontentloaded")
             page.wait_for_timeout(3000)
 
@@ -153,7 +161,6 @@ def scrape_dbs(url):
     except Exception as e:
         log.error(f"Error scraping DBS {url}: {e}")
     return None
-
 
 def scrape_paris(url):
     return scrape_with_playwright(
