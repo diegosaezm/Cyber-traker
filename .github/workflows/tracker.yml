@@ -1,0 +1,52 @@
+name: CyberDay Price Tracker
+
+on:
+  schedule:
+    # Corre cada 2 horas normalmente
+    - cron: '0 */2 * * *'
+  workflow_dispatch: # permite correrlo manualmente desde GitHub
+
+jobs:
+  track-prices:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+
+      - name: Instalar Chromium para Playwright
+        run: |
+          python -m playwright install chromium
+          python -m playwright install-deps chromium
+
+      - name: Descargar base de datos anterior
+        uses: actions/cache@v4
+        with:
+          path: prices.db
+          key: prices-db-${{ github.run_id }}
+          restore-keys: |
+            prices-db-
+
+      - name: Correr tracker (1 ciclo)
+        env:
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+          PRODUCTS_JSON: ${{ secrets.PRODUCTS_JSON }}
+          RUN_ONCE: "true"
+        run: python tracker.py
+
+      - name: Guardar base de datos actualizada
+        uses: actions/cache/save@v4
+        with:
+          path: prices.db
+          key: prices-db-${{ github.run_id }}

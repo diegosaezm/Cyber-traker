@@ -17,6 +17,8 @@ import time
 import logging
 from config import EMAIL_CONFIG, PRODUCTS
 from datetime import date
+import os 
+
 # ─────────────────────────────────────────────
 # Logging
 # ─────────────────────────────────────────────
@@ -367,7 +369,11 @@ def run_tracker(interval_minutes=30):
         else:
             log.info("Sin ofertas reales en este ciclo.")
 
-        log.info(f"⏳ Esperando {interval_minutes} minutos...\n")
+        if os.environ.get("RUN_ONCE") == "true":
+            log.info("MODO GIT ACTIVADO - CICLO ÚNICO OKEI")
+            break
+
+        log.info(f"Esperando {interval_minutes} minutos para la próxima revisión...\n")
         time.sleep(interval_minutes * 60)
 
 
