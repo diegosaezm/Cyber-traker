@@ -225,7 +225,8 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # Cargar datos
-# ─────────────────────────────────────────────
+from db import init_db, get_all_history
+init_db()  # crea la tabla si no existe
 df = load_data()
 summary = get_summary(df)
 
