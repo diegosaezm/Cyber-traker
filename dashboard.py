@@ -2,7 +2,8 @@
 dashboard.py — CyberDay Price Tracker Dashboard
 Corre con: streamlit run dashboard.py
 """
-
+from db import get_all_history
+import pandas as pd
 import streamlit as st
 import sqlite3
 import pandas as pd
@@ -168,15 +169,10 @@ h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 800; }
 DB_PATH = "prices.db"
 
 def load_data():
-    if not os.path.exists(DB_PATH):
+    rows = get_all_history()
+    if not rows:
         return pd.DataFrame()
-    conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query("""
-        SELECT store, product_url, product_name, price, timestamp
-        FROM price_history
-        ORDER BY timestamp ASC
-    """, conn)
-    conn.close()
+    df = pd.DataFrame(rows)
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df["price"] = df["price"].astype(int)
     return df
