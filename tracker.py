@@ -16,6 +16,7 @@ from datetime import datetime
 import time
 import logging
 from config import EMAIL_CONFIG, PRODUCTS
+from db import init_db, save_price, get_last_price, get_last_date, get_max_price
 from datetime import date
 import os 
 
@@ -40,57 +41,8 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 
-# ─────────────────────────────────────────────
-# Base de datos SQLite
-# ─────────────────────────────────────────────
-def init_db():
-    conn = sqlite3.connect("prices.db")
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS price_history (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            store       TEXT NOT NULL,
-            product_url TEXT NOT NULL,
-            product_name TEXT,
-            price       INTEGER,
-            timestamp   TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    return conn
 
 
-def save_price(conn, store, url, name, price):
-    conn.execute(
-        "INSERT INTO price_history (store, product_url, product_name, price, timestamp) VALUES (?,?,?,?,?)",
-        (store, url, name, price, datetime.now().isoformat())
-    )
-    conn.commit()
-
-
-def get_price_history(conn, url, limit=10):
-    cur = conn.execute(
-        "SELECT price, timestamp FROM price_history WHERE product_url=? ORDER BY timestamp DESC LIMIT ?",
-        (url, limit)
-    )
-    return cur.fetchall()
-
-
-def get_last_price(conn, url):
-    cur = conn.execute(
-        "SELECT price FROM price_history WHERE product_url=? ORDER BY timestamp DESC LIMIT 1",
-        (url,)
-    )
-    row = cur.fetchone()
-    return row[0] if row else None
-
-def get_last_date(conn, url):
-    cur = conn.execute(
-        "SELECT timestamp FROM price_history WHERE product_url=? ORDER BY timestamp DESC LIMIT 1",
-        (url,)
-    )
-    row = cur.fetchone()
-    return row[0][:10] if row else None
-    # [:10] recorta "2026-05-21T22:13:00" → "2026-05-21"
 
 
 # ─────────────────────────────────────────────
