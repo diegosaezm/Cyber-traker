@@ -10,9 +10,9 @@ import json
 EMAIL_CONFIG = {
     "smtp_host": "smtp.gmail.com",
     "smtp_port": 465,
-    "sender":    os.environ.get("EMAIL_SENDER", "tu_email@gmail.com"),
-    "password":  os.environ.get("EMAIL_PASSWORD", "xxxx xxxx xxxx xxxx"),
-    "recipient": os.environ.get("EMAIL_RECIPIENT", "tu_email@gmail.com"),
+    "sender":    os.environ.get("EMAIL_SENDER", "diiegosaez874@gmail.com"),
+    "password":  os.environ.get("EMAIL_PASSWORD", "kgdyxxxvhmyhyana"),
+    "recipient": os.environ.get("EMAIL_RECIPIENT", "diiegosaez874@gmail.com"),
 }
 
 # ─────────────────────────────────────────────
@@ -36,7 +36,9 @@ else:
         "paris": [],
         
         "dbs": [
-            "https://dbs.cl/corrector-true-skin-high-cover-ca-27708-0"
+            "https://dbs.cl/corrector-true-skin-high-cover-ca-27708-0",
+            "https://dbs.cl/ca-53151-polvo-traslucido-nude-illusion",
+            "https://dbs.cl/my-11887-delineador-de-ojos-liquido-master-ink-10-charcoal-black"
 
         ]
     }
